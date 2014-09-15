@@ -3,33 +3,24 @@ package com.example.training;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
     	View view = inflater.inflate(R.layout.login_page, container, false);
     	
     	final EditText accontEdt = (EditText) view.findViewById(R.id.editText1);
@@ -41,7 +32,6 @@ public class LoginFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 			    SharedPref sharedPref = new SharedPref();
 			    String[] sharedPrefData = sharedPref.load(getActivity());
 			    String sharedPrefAccontStr = sharedPrefData[0];
@@ -75,7 +65,6 @@ public class LoginFragment extends Fragment {
             
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.popBackStack();
             }
@@ -86,7 +75,6 @@ public class LoginFragment extends Fragment {
             
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
                 if (isError(accontEdt.getText().toString()) && isError(passwordEdt.getText().toString())) {
                     Toast.makeText(getActivity(), "註冊失敗", Toast.LENGTH_SHORT).show();
                 }
@@ -101,6 +89,7 @@ public class LoginFragment extends Fragment {
                     else {
                         mDbHelper.UpdateDatabase(accontEdt.getText().toString(), passwordEdt.getText().toString());
                     }
+                    
                     Toast.makeText(getActivity(), "註冊成功", Toast.LENGTH_SHORT).show();
                 }
             }
