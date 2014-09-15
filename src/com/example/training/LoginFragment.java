@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,8 +23,8 @@ public class LoginFragment extends Fragment {
             Bundle savedInstanceState) {
         // TODO Auto-generated method stub
     	View view = inflater.inflate(R.layout.login_page, container, false);
-    	Button btn = (Button) view.findViewById(R.id.button1);
-    	btn.setOnClickListener(new OnClickListener() {
+    	Button btn1 = (Button) view.findViewById(R.id.button1);
+    	btn1.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -36,6 +37,17 @@ public class LoginFragment extends Fragment {
 		    	fragmentTransaction.commit();
 			}
 		});
+    	
+    	Button btn2 = (Button) view.findViewById(R.id.button2);
+    	btn2.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.popBackStack();
+            }
+        });
         return view;
     }
 }

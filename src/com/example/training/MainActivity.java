@@ -54,8 +54,9 @@ public class MainActivity extends FragmentActivity {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                 LoginFragment f = new LoginFragment();          
-                fragmentTransaction.commit();
                 fragmentTransaction.add(R.id.main_activity, f);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
