@@ -16,6 +16,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginFragment extends Fragment {
     @Override
@@ -33,41 +35,41 @@ public class LoginFragment extends Fragment {
     	final EditText accontEdt = (EditText) view.findViewById(R.id.editText1);
     	final EditText passwordEdt = (EditText) view.findViewById(R.id.editText2);
     	
+    	// 登入
     	Button btn1 = (Button) view.findViewById(R.id.button1);
     	btn1.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-			    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-		        SharedPreferences.Editor editor = sharedPref.edit();
-		        editor.putString("accont", accontEdt.getText().toString());
-		        editor.putString("password", passwordEdt.getText().toString());
-		        editor.commit();
+			    SharedPref sharedPref = new SharedPref();
+			    String[] sharedPrefData = sharedPref.load(getActivity());
+			    String sharedPrefAccontStr = sharedPrefData[0];
+			    String sharedPrefPasswordStr = sharedPrefData[1];
 		        
 		        MyDBHelper mDbHelper = new MyDBHelper(getActivity());
-		        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		        Cursor cursor = db.query("acInforDB", new String[] {"id", "account", "password"}, null, null, null, null, null);
-		        ContentValues cv = new ContentValues();
-		        cv.put("account", accontEdt.getText().toString());
-                cv.put("password", passwordEdt.getText().toString());
-		        if (cursor.getCount()==0) {
-		            cv.put("id", 1);
-	                db.insert("acInforDB", null, cv);
+		        String[] sqlData = mDbHelper.GetDatabase();
+		        String sqlAccontStr = sqlData[0];
+		        String sqlPasswordStr = sqlData[1];
+		        
+		        if (sharedPrefAccontStr.equals(accontEdt.getText().toString()) && 
+		            sharedPrefPasswordStr.equals(passwordEdt.getText().toString()) && 
+		            sqlAccontStr.equals(accontEdt.getText().toString()) && 
+		            sqlPasswordStr.equals(passwordEdt.getText().toString())) {
+		            
+		            FragmentManager fragmentManager = getFragmentManager();
+	                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+	                IsLoginFragment f = new IsLoginFragment();
+	                fragmentTransaction.replace(R.id.login_page, f, "btn1");
+	                fragmentTransaction.addToBackStack(null);
+	                fragmentTransaction.commit();
                 }
 		        else {
-		            db.update("acInforDB", cv, "id=1", null);
+		            Toast.makeText(getActivity(), "登入失敗", Toast.LENGTH_SHORT).show();
                 }
-
-				FragmentManager fragmentManager = getFragmentManager();
-		    	FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-		    	IsLoginFragment f = new IsLoginFragment();
-		    	fragmentTransaction.replace(R.id.login_page, f);
-		    	fragmentTransaction.addToBackStack(null);
-		    	fragmentTransaction.commit();
 			}
 		});
-    	
+    	// 取消
     	Button btn2 = (Button) view.findViewById(R.id.button2);
     	btn2.setOnClickListener(new OnClickListener() {
             
@@ -78,6 +80,43 @@ public class LoginFragment extends Fragment {
                 fragmentManager.popBackStack();
             }
         });
+    	// 註冊
+    	Button btn3 = (Button) view.findViewById(R.id.button3);
+    	btn3.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (isError(accontEdt.getText().toString()) && isError(passwordEdt.getText().toString())) {
+                    Toast.makeText(getActivity(), "註冊失敗", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    SharedPref sharedPref = new SharedPref();
+                    sharedPref.save(getActivity(), accontEdt.getText().toString(), passwordEdt.getText().toString());
+                    
+                    MyDBHelper mDbHelper = new MyDBHelper(getActivity());
+                    if (mDbHelper.getCursorCount()==0) {
+                        mDbHelper.InsertDatabase(accontEdt.getText().toString(), passwordEdt.getText().toString());
+                    }
+                    else {
+                        mDbHelper.UpdateDatabase(accontEdt.getText().toString(), passwordEdt.getText().toString());
+                    }
+                    Toast.makeText(getActivity(), "註冊成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    	
         return view;
+    }
+    
+    private boolean isError(String data) {
+        if (data == null) {
+            return true;
+        }
+        data.trim();
+        if (data.equals("")) {
+            return true;
+        }
+        return false;
     }
 }
