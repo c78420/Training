@@ -31,8 +31,8 @@ public class LoginFragment extends Fragment {
 				FragmentManager fragmentManager = getFragmentManager();
 		    	FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
 		    	IsLoginFragment f = new IsLoginFragment();
-		    	fragmentTransaction.replace(R.id.main_activity, f);
-//		    	fragmentTransaction.addToBackStack(null);
+		    	fragmentTransaction.replace(R.id.login_page, f);
+		    	fragmentTransaction.addToBackStack(null);
 		    	fragmentTransaction.commit();
 			}
 		});
